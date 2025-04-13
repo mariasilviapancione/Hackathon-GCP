@@ -7,11 +7,11 @@ df = pd.read_csv("../data/mushrooms.csv")
 sample = df.iloc[0].copy()
 
 # Prepara input per FastAPI
+selected_features = ["odor", "bruises", "cap-shape", "gill-color", "ring-type"]
 input_dict = {}
-for col in sample.index:
-    if col != "class":
-        new_key = col.replace("-", "_")
-        input_dict[new_key] = str(sample[col])  # ATTENZIONE: valore come stringa
+for col in selected_features:
+    new_key = col.replace("-", "_")  # adattamento per FastAPI
+    input_dict[new_key] = str(sample[col])
 
 # Debug del payload inviato
 print("Payload JSON:", input_dict)

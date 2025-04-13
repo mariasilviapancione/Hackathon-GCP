@@ -23,7 +23,8 @@ for col in df.columns:
 pickle.dump(label_encoders, open("label_encoders.pkl", "wb"))
 
 # Split
-X = df.drop("class", axis=1)
+selected_features = ["odor", "bruises", "cap_shape", "gill_color", "ring_type"]
+X = df[selected_features]
 y = df["class"]
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
