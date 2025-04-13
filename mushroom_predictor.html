@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mushroom Classifier</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2em; background: #f4f4f4; }
+    label { display: block; margin-top: 1em; font-weight: bold; }
+    select, button { padding: 0.5em; width: 200px; }
+    button { background-color: #4CAF50; color: white; border: none; margin-top: 1.5em; }
+    #result { margin-top: 2em; font-size: 1.2em; }
+  </style>
+</head>
+<body>
+  <h2>🍄 Mushroom Edibility Predictor</h2>
+  <form id="predictForm">
+    <label>Odor:
+      <select id="odor">
+        <option value="p">p (pungent)</option>
+        <option value="a">a (almond)</option>
+        <option value="l">l (anise)</option>
+        <option value="n">n (none)</option>
+      </select>
+    </label>
+    <label>Bruises:
+      <select id="bruises">
+        <option value="t">t (bruises)</option>
+        <option value="f">f (no bruises)</option>
+      </select>
+    </label>
+    <label>Cap Shape:
+      <select id="cap_shape">
+        <option value="x">x (convex)</option>
+        <option value="f">f (flat)</option>
+        <option value="k">k (knobbed)</option>
+      </select>
+    </label>
+    <label>Gill Color:
+      <select id="gill_color">
+        <option value="k">k (black)</option>
+        <option value="n">n (brown)</option>
+        <option value="b">b (buff)</option>
+      </select>
+    </label>
+    <label>Ring Type:
+      <select id="ring_type">
+        <option value="p">p (pendant)</option>
+        <option value="e">e (evanescent)</option>
+      </select>
+    </label>
+    <button type="submit">Predict</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('predictForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const data = {
+        odor: document.getElementById('odor').value,
+        bruises: document.getElementById('bruises').value,
+        cap_shape: document.getElementById('cap_shape').value,
+        gill_color: document.getElementById('gill_color').value,
+        ring_type: document.getElementById('ring_type').value
+      };
+
+      try {
+        const response = await fetch("https://mushroom-api-78712017343.europe-west1.run.app/predict/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        document.getElementById("result").innerText = 
+          result.prediction ? `🍽 Prediction: ${result.prediction === 'e' ? 'Edible ✅' : 'Poisonous ☠️'}` 
+                            : `❌ API Error: ${JSON.stringify(result)}`;
+      } catch (error) {
+        document.getElementById("result").innerText = "❌ Request failed: " + error;
+      }
+    });
+  </script>
+</body>
+</html>
