@@ -7,12 +7,12 @@ import pandas as pd
 # Inizializza FastAPI
 app = FastAPI()
 
-# Abilita CORS per richieste dal web (es. GitHub Pages)
+# Abilita CORS solo per GitHub Pages
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["https://mariasilviapancione.github.io"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["POST"],
     allow_headers=["*"],
 )
 
@@ -20,7 +20,7 @@ app.add_middleware(
 model = pickle.load(open("model.pkl", "rb"))
 label_encoders = pickle.load(open("label_encoders.pkl", "rb"))
 
-# Modello dati per la richiesta
+# Modello dati in input
 class MushroomInput(BaseModel):
     odor: str = Field(..., example="p")
     bruises: str = Field(..., example="t")
@@ -28,11 +28,11 @@ class MushroomInput(BaseModel):
     gill_color: str = Field(..., example="k")
     ring_type: str = Field(..., example="p")
 
-# Endpoint di predizione
+# Endpoint API per predizione
 @app.post("/predict")
 def predict(input_data: MushroomInput):
     try:
-        # Converte l'input in DataFrame
+        # Converte input in DataFrame
         input_dict = input_data.dict()
         df_input = pd.DataFrame([input_dict])
 
@@ -40,7 +40,7 @@ def predict(input_data: MushroomInput):
         for col in df_input.columns:
             df_input[col] = label_encoders[col].transform(df_input[col])
 
-        # Predice e decodifica l'output
+        # Predizione
         pred_encoded = model.predict(df_input)[0]
         pred_label = label_encoders["class"].inverse_transform([pred_encoded])[0]
 
@@ -48,5 +48,4 @@ def predict(input_data: MushroomInput):
     except Exception as e:
         print("❌ Errore interno:", e)
         return {"error": str(e)}
-
 
