@@ -5,7 +5,8 @@ WORKDIR /app
 COPY . /app
 
 RUN pip install poetry
-RUN poetry config virtualenvs.create false && poetry install --no-root --no-dev
+RUN poetry config virtualenvs.create false && poetry install --no-root
+
 
 EXPOSE 8000
 
