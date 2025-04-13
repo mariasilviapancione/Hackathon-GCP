@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import pickle
 import pandas as pd
 
@@ -11,28 +11,29 @@ label_encoders = pickle.load(open("label_encoders.pkl", "rb"))
 
 # Definizione input
 class MushroomInput(BaseModel):
-    cap_shape: str
-    cap_surface: str
-    cap_color: str
-    bruises: str
-    odor: str
-    gill_attachment: str
-    gill_spacing: str
-    gill_size: str
-    gill_color: str
-    stalk_shape: str
-    stalk_root: str
-    stalk_surface_above_ring: str
-    stalk_surface_below_ring: str
-    stalk_color_above_ring: str
-    stalk_color_below_ring: str
-    veil_type: str
-    veil_color: str
-    ring_number: str
-    ring_type: str
-    spore_print_color: str
-    population: str
-    habitat: str
+    cap_shape: str = Field(..., example="x")
+    cap_surface: str = Field(..., example="s")
+    cap_color: str = Field(..., example="n")
+    bruises: str = Field(..., example="t")
+    odor: str = Field(..., example="p")
+    gill_attachment: str = Field(..., example="f")
+    gill_spacing: str = Field(..., example="c")
+    gill_size: str = Field(..., example="n")
+    gill_color: str = Field(..., example="k")
+    stalk_shape: str = Field(..., example="e")
+    stalk_root: str = Field(..., example="e")
+    stalk_surface_above_ring: str = Field(..., example="s")
+    stalk_surface_below_ring: str = Field(..., example="s")
+    stalk_color_above_ring: str = Field(..., example="w")
+    stalk_color_below_ring: str = Field(..., example="w")
+    veil_type: str = Field(..., example="p")
+    veil_color: str = Field(..., example="w")
+    ring_number: str = Field(..., example="o")
+    ring_type: str = Field(..., example="p")
+    spore_print_color: str = Field(..., example="k")
+    population: str = Field(..., example="s")
+    habitat: str = Field(..., example="u")
+
 
 @app.post("/predict")
 def predict(input_data: MushroomInput):
